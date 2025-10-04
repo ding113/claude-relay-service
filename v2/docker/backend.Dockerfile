@@ -2,7 +2,7 @@
 FROM node:20-alpine AS base
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.18.0 --activate
 
 # Dependencies stage
 FROM base AS deps
@@ -38,7 +38,7 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.18.0 --activate
 
 # Install dumb-init for signal handling
 RUN apk add --no-cache dumb-init
