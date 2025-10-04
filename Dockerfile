@@ -5,7 +5,7 @@ FROM node:18-alpine AS frontend-builder
 WORKDIR /app/web/admin-spa
 
 # 📦 安装 pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.18.0 --activate
 
 # 📦 复制前端依赖文件
 COPY web/admin-spa/package.json web/admin-spa/pnpm-lock.yaml ./
@@ -38,7 +38,7 @@ RUN apk add --no-cache \
 WORKDIR /app
 
 # 📦 安装 pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.18.0 --activate
 
 # 📦 复制 package 文件
 COPY package.json pnpm-lock.yaml ./
