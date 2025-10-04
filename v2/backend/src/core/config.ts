@@ -18,6 +18,13 @@ const envSchema = z.object({
   REDIS_DB: z.string().transform(Number).pipe(z.number().min(0).max(15)).default('1'),
   REDIS_ENABLE_TLS: z.string().transform((v) => v === 'true').default('false'),
 
+  // Timezone
+  TIMEZONE_OFFSET: z
+    .string()
+    .transform(Number)
+    .pipe(z.number().min(-12).max(14))
+    .default('8'), // UTC+8
+
   // Logging
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   LOG_PRETTY: z.string().transform((v) => v === 'true').default('true'),
