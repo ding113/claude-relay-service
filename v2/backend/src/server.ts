@@ -47,18 +47,18 @@ const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM']
 
 signals.forEach((signal) => {
   process.on(signal, async () => {
-    logger.info(`🛑 Received ${signal}, starting graceful shutdown...`)
+    logger.info(`Received ${signal}, starting graceful shutdown...`)
 
     try {
       await fastify.close()
-      logger.info('🚪 HTTP server closed')
+      logger.info('HTTP server closed')
 
       await redisClient.disconnect()
-      logger.success('✅ Graceful shutdown completed')
+      logger.info('Graceful shutdown completed')
 
       process.exit(0)
     } catch (error) {
-      logger.error(error, '❌ Error during shutdown')
+      logger.error(error)
       process.exit(1)
     }
   })
@@ -68,7 +68,7 @@ signals.forEach((signal) => {
 const start = async () => {
   try {
     // Connect to Redis
-    logger.info('🔄 Connecting to Redis...')
+    logger.info('Connecting to Redis...')
     await redisClient.connect()
 
     // Start HTTP server
@@ -77,11 +77,11 @@ const start = async () => {
       host: config.HOST
     })
 
-    logger.info(`🚀 v2 Backend started on ${config.HOST}:${config.PORT}`)
-    logger.info(`📊 Environment: ${config.NODE_ENV}`)
-    logger.info(`🔗 Health check: http://${config.HOST}:${config.PORT}/health`)
+    logger.info(`v2 Backend started on ${config.HOST}:${config.PORT}`)
+    logger.info(`Environment: ${config.NODE_ENV}`)
+    logger.info(`Health check: http://${config.HOST}:${config.PORT}/health`)
   } catch (error) {
-    logger.error(error, '💥 Failed to start server')
+    logger.error(error)
     process.exit(1)
   }
 }

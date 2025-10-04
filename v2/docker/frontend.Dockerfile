@@ -21,8 +21,9 @@ RUN pnpm install --frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 
-# Copy dependencies from workspace root
+# Copy workspace dependencies structure (pnpm links)
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/v2/frontend/node_modules ./v2/frontend/node_modules
 
 # Copy source
 COPY pnpm-workspace.yaml ./

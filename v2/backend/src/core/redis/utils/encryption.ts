@@ -62,7 +62,7 @@ export function encryptSensitiveData(data: string): string {
 
     return `${iv.toString('hex')}:${encrypted}`
   } catch (error) {
-    logger.error('Encryption error', { error })
+    logger.error({ error }, 'Encryption error')
     return data // 失败时返回原文（v1 行为）
   }
 }
@@ -98,7 +98,7 @@ export function decryptSensitiveData(encryptedData: string): string {
     // 格式不对，返回原文
     return encryptedData
   } catch (error) {
-    logger.error('Decryption error', { error })
+    logger.error({ error }, 'Decryption error')
     return encryptedData // 失败时返回原文（v1 行为）
   }
 }

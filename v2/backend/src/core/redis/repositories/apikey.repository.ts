@@ -5,12 +5,7 @@
  */
 
 import type Redis from 'ioredis'
-import type {
-  ApiKeyData,
-  ApiKey,
-  CreateApiKeyOptions,
-  UpdateApiKeyOptions
-} from '@shared/types'
+import type { ApiKeyData } from '@shared/types'
 import { REDIS_KEYS, REDIS_KEY_PATTERNS } from '@shared/types'
 import logger from '@core/logger'
 
@@ -32,7 +27,7 @@ export class ApiKeyRepository {
     const key = REDIS_KEYS.API_KEY(keyId)
 
     // 保存 API Key 数据
-    await this.redis.hset(key, keyData as Record<string, string>)
+    await this.redis.hset(key, keyData as unknown as Record<string, string>)
     await this.redis.expire(key, 86400 * 365) // 1 年过期
 
     // 建立哈希映射（如果提供了 hashedKey）
@@ -40,7 +35,7 @@ export class ApiKeyRepository {
       await this.setHashMapping(hashedKey, keyId)
     }
 
-    logger.debug('API Key saved', { keyId, hasHashMapping: !!hashedKey })
+    logger.debug({ keyId, hasHashMapping: !!hashedKey }, 'API Key saved')
   }
 
   /**
@@ -58,7 +53,7 @@ export class ApiKeyRepository {
       return null
     }
 
-    return data as ApiKeyData
+    return { id: keyId, ...data } as unknown as ApiKeyData
   }
 
   /**
@@ -85,7 +80,8 @@ export class ApiKeyRepository {
       return null
     }
 
-    return { id: keyId, ...keyData }
+    // keyData already includes id from findById
+    return keyData
   }
 
   /**
@@ -132,7 +128,7 @@ export class ApiKeyRepository {
     // 删除 API Key 数据
     await this.redis.del(key)
 
-    logger.debug('API Key deleted', { keyId })
+    logger.debug({ keyId }, 'API Key deleted')
   }
 
   /**
@@ -176,9 +172,9 @@ export class ApiKeyRepository {
    */
   async update(keyId: string, updates: Partial<ApiKeyData>): Promise<void> {
     const key = REDIS_KEYS.API_KEY(keyId)
-    await this.redis.hset(key, updates as Record<string, string>)
+    await this.redis.hset(key, updates as unknown as Record<string, string>)
 
-    logger.debug('API Key updated', { keyId, fields: Object.keys(updates) })
+    logger.debug({ keyId, fields: Object.keys(updates) }, 'API Key updated')
   }
 
   /**

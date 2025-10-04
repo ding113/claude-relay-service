@@ -46,11 +46,15 @@ RUN apk add --no-cache dumb-init
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
-# Copy package files for production install
-COPY --chown=nodejs:nodejs v2/backend/package.json ./
+# Copy workspace configuration files
+COPY --chown=nodejs:nodejs pnpm-workspace.yaml ./
+COPY --chown=nodejs:nodejs pnpm-lock.yaml ./
+COPY --chown=nodejs:nodejs v2/package.json ./v2/
+COPY --chown=nodejs:nodejs v2/backend/package.json ./v2/backend/
 
-# Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
+# Copy production dependencies from deps stage (already filtered by pnpm)
+COPY --from=deps --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=deps --chown=nodejs:nodejs /app/v2/backend/node_modules ./v2/backend/node_modules
 
 # Copy built application
 COPY --from=builder --chown=nodejs:nodejs /app/v2/backend/dist ./dist
