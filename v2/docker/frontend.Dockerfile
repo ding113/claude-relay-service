@@ -14,17 +14,15 @@ COPY pnpm-lock.yaml ./
 COPY v2/package.json ./v2/
 COPY v2/frontend/package.json ./v2/frontend/
 
-# Install dependencies
-RUN cd v2 && pnpm install --frozen-lockfile
+# Install dependencies at workspace root
+RUN pnpm install --frozen-lockfile
 
 # Build stage
 FROM base AS builder
 WORKDIR /app
 
-# Copy dependencies
+# Copy dependencies from workspace root
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/v2/node_modules ./v2/node_modules
-COPY --from=deps /app/v2/frontend/node_modules ./v2/frontend/node_modules
 
 # Copy source
 COPY pnpm-workspace.yaml ./

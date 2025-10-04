@@ -14,17 +14,15 @@ COPY pnpm-lock.yaml ./
 COPY v2/package.json ./v2/
 COPY v2/backend/package.json ./v2/backend/
 
-# Install dependencies
-RUN cd v2 && pnpm install --frozen-lockfile
+# Install dependencies at workspace root
+RUN pnpm install --frozen-lockfile
 
 # Build stage
 FROM base AS builder
 WORKDIR /app
 
-# Copy dependencies
+# Copy dependencies from workspace root
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/v2/node_modules ./v2/node_modules
-COPY --from=deps /app/v2/backend/node_modules ./v2/backend/node_modules
 
 # Copy source
 COPY pnpm-workspace.yaml ./
@@ -38,6 +36,9 @@ RUN cd v2/backend && pnpm build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Install dumb-init for signal handling
 RUN apk add --no-cache dumb-init
 
@@ -45,10 +46,14 @@ RUN apk add --no-cache dumb-init
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
+# Copy package files for production install
+COPY --chown=nodejs:nodejs v2/backend/package.json ./
+
+# Install production dependencies only
+RUN pnpm install --prod --frozen-lockfile
+
 # Copy built application
 COPY --from=builder --chown=nodejs:nodejs /app/v2/backend/dist ./dist
-COPY --from=builder --chown=nodejs:nodejs /app/v2/backend/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/v2/backend/package.json ./
 
 # Create logs directory
 RUN mkdir -p logs && chown nodejs:nodejs logs
