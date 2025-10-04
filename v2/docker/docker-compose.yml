@@ -1,0 +1,97 @@
+version: '3.8'
+
+# Claude Relay Service v2 Docker Compose Configuration
+# 与 v1 服务并行运行，互不干扰
+
+services:
+  # 🚀 v2 Backend API
+  v2-backend:
+    build:
+      context: ..
+      dockerfile: v2/docker/backend.Dockerfile
+    image: ghcr.io/ding113/claude-relay-service:v2-backend-latest
+    container_name: claude-relay-v2-backend
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      # Server
+      - NODE_ENV=production
+      - PORT=4000
+      - HOST=0.0.0.0
+
+      # Security (⚠️ 必须修改)
+      - JWT_SECRET=${V2_JWT_SECRET}
+      - ENCRYPTION_KEY=${V2_ENCRYPTION_KEY}
+
+      # Redis (使用 v1 的 Redis，但不同的 DB)
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=1  # v2 使用 DB 1
+      - REDIS_ENABLE_TLS=false
+
+      # Logging
+      - LOG_LEVEL=${V2_LOG_LEVEL:-info}
+      - LOG_PRETTY=false
+
+    volumes:
+      - ./v2-logs:/app/logs
+    networks:
+      - claude-relay-network
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 🎨 v2 Frontend Web
+  v2-frontend:
+    build:
+      context: ..
+      dockerfile: v2/docker/frontend.Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${V2_API_URL:-http://localhost:4000}
+    image: ghcr.io/ding113/claude-relay-service:v2-frontend-latest
+    container_name: claude-relay-v2-frontend
+    restart: unless-stopped
+    ports:
+      - "3002:3000"  # 对外 3002，容器内 3000
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NEXT_PUBLIC_API_URL=${V2_API_URL:-http://localhost:4000}
+    networks:
+      - claude-relay-network
+    depends_on:
+      - v2-backend
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 📊 Redis Database (共用 v1 的 Redis)
+  redis:
+    image: redis:7-alpine
+    container_name: claude-relay-redis
+    restart: unless-stopped
+    expose:
+      - "6379"
+    volumes:
+      - ../redis_data:/data
+    command: redis-server --save 60 1 --appendonly yes --appendfsync everysec
+    networks:
+      - claude-relay-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  claude-relay-network:
+    name: claude-relay-network
+    external: true  # 使用 v1 创建的网络

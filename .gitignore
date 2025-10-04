@@ -246,3 +246,13 @@ web/apiStats/
 
 # Admin SPA build files
 web/admin-spa/dist/
+
+# v2 specific files
+v2/backend/dist/
+v2/backend/.env
+v2/backend/.env.local
+v2/frontend/.next/
+v2/frontend/out/
+v2/frontend/.env.local
+v2/docker/.env
+v2-logs/
