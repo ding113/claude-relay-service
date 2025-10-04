@@ -4,9 +4,10 @@
   "private": true,
   "description": "Claude Relay Service v2 - Monorepo Root",
   "scripts": {
-    "dev": "pnpm --parallel --filter './backend' --filter './frontend' dev",
+    "dev": "bash scripts/dev.sh",
     "dev:backend": "pnpm --filter backend dev",
     "dev:frontend": "pnpm --filter frontend dev",
+    "stop": "bash scripts/stop-all.sh",
     "build": "pnpm --filter backend build && pnpm --filter frontend build",
     "build:backend": "pnpm --filter backend build",
     "build:frontend": "pnpm --filter frontend build",

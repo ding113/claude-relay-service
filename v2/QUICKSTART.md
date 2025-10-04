@@ -6,7 +6,7 @@ v2 项目使用 **TypeScript + Fastify + Next.js** 技术栈，与 v1 完全隔�
 
 ---
 
-## 🚀 快速开始（3 步）
+## 🚀 快速开始（2 步）
 
 ### 1. 安装依赖
 
@@ -15,7 +15,20 @@ cd v2
 pnpm install
 ```
 
-### 2. 配置环境变量
+### 2. 一键启动（自动启动 Redis + Backend + Frontend）
+
+```bash
+pnpm dev
+```
+
+就这么简单！脚本会自动：
+- ✅ 启动 Redis Docker 容器
+- ✅ 启动 Backend API (端口 4000)
+- ✅ 启动 Frontend Web (端口 3001)
+
+### （可选）配置环境变量
+
+如需自定义配置：
 
 ```bash
 # Backend
@@ -26,18 +39,6 @@ cp .env.example .env
 # Frontend
 cd ../frontend
 cp .env.example .env.local
-```
-
-### 3. 启动开发环境
-
-```bash
-# 方式 1: 使用便捷脚本（推荐）
-cd ../..
-bash scripts/dev-v2.sh
-
-# 方式 2: 手动启动
-cd v2
-pnpm dev  # 同时启动前后端
 ```
 
 ---
@@ -66,32 +67,23 @@ v2/
 
 ## 🔧 常用命令
 
-### 开发
+| 命令 | 说明 |
+|------|------|
+| `pnpm dev` | 🚀 一键启动完整开发环境（Redis + Backend + Frontend） |
+| `pnpm stop` | 🛑 停止所有服务 |
+| `pnpm dev:backend` | 只启动 Backend |
+| `pnpm dev:frontend` | 只启动 Frontend |
+| `pnpm build` | 构建生产版本 |
+| `pnpm lint` | 代码检查 |
+
+### 手动控制脚本
 
 ```bash
-# 同时启动前后端
-pnpm dev
+# 单独启动 Redis
+bash scripts/start-redis.sh
 
-# 单独启动
-pnpm dev:backend    # 只启动后端
-pnpm dev:frontend   # 只启动前端
-```
-
-### 构建
-
-```bash
-# 构建所有
-pnpm build
-
-# 单独构建
-pnpm build:backend
-pnpm build:frontend
-```
-
-### 代码检查
-
-```bash
-pnpm lint
+# 停止所有服务
+bash scripts/stop-all.sh
 ```
 
 ---
@@ -153,34 +145,45 @@ v2 使用 Redis **DB 1**（v1 使用 DB 0），数据完全隔离。
 ### 端口被占用
 
 ```bash
-# 查看端口占用
-lsof -i :4000
-lsof -i :3001
+# 使用停止脚本
+pnpm stop
 
-# 杀死进程
-kill -9 <PID>
+# 或手动清理
+lsof -ti:4000,3001 | xargs kill -9
 ```
 
-### Redis 连接失败
-
-确保 Redis 运行中：
+### Redis 启动失败
 
 ```bash
-# 检查 Redis 状态
-redis-cli ping
+# 检查 Docker 是否运行
+docker ps
 
-# 启动 Redis（如未运行）
-redis-server
+# 查看 Redis 日志
+docker logs claude-relay-redis
+
+# 重启 Redis 容器
+docker restart claude-relay-redis
+```
+
+### 完全重置
+
+```bash
+# 停止所有服务
+pnpm stop
+
+# 删除 Redis 容器和数据
+docker rm -f claude-relay-redis
+rm -rf redis_data
+
+# 重新启动
+pnpm dev
 ```
 
 ### 依赖安装失败
 
 ```bash
-# 清理缓存
+# 清理并重装
 pnpm store prune
-
-# 重新安装
-cd v2
 rm -rf node_modules backend/node_modules frontend/node_modules
 pnpm install
 ```
