@@ -23,6 +23,7 @@ WORKDIR /app
 
 # Copy dependencies from workspace root
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/v2/backend/node_modules ./v2/backend/node_modules
 
 # Copy source
 COPY pnpm-workspace.yaml ./
