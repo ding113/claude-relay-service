@@ -106,6 +106,7 @@ If you have any of these concerns, this project might be suitable for you.
 
 ### Software Requirements
 - **Node.js** 18 or higher
+- **pnpm** 9 or higher (enable via `corepack enable`)
 - **Redis** 6 or higher
 - **Operating System**: Linux recommended
 
@@ -150,8 +151,12 @@ sudo systemctl start redis
 git clone https://github.com/ding113/claude-relay-service.git
 cd claude-relay-service
 
+# Enable pnpm (Node.js 18+ has built-in corepack)
+corepack enable
+corepack prepare pnpm@latest --activate
+
 # Install dependencies
-npm install
+pnpm install
 
 # Copy configuration files (Important!)
 cp config/config.example.js config/config.js
@@ -191,13 +196,13 @@ module.exports = {
 
 ```bash
 # Initialize
-npm run setup # Will randomly generate admin account password info, stored in data/init.json
+pnpm run setup # Will randomly generate admin account password info, stored in data/init.json
 
 # Start service
-npm run service:start:daemon   # Run in background (recommended)
+pnpm run service:start:daemon   # Run in background (recommended)
 
 # Check status
-npm run service:status
+pnpm run service:status
 ```
 
 ---
@@ -257,16 +262,16 @@ claude
 
 ```bash
 # Check service status
-npm run service:status
+pnpm run service:status
 
 # View logs
-npm run service:logs
+pnpm run service:logs
 
 # Restart service
-npm run service:restart:daemon
+pnpm run service:restart:daemon
 
 # Stop service
-npm run service:stop
+pnpm run service:stop
 ```
 
 ### Monitor Usage
@@ -286,18 +291,18 @@ cd claude-relay-service
 # 2. Pull latest code
 git pull origin main
 
-# If you encounter package-lock.json conflicts, use the remote version
-git checkout --theirs package-lock.json
-git add package-lock.json
+# If you encounter pnpm-lock.yaml conflicts, use the remote version
+git checkout --theirs pnpm-lock.yaml
+git add pnpm-lock.yaml
 
 # 3. Install new dependencies (if any)
-npm install
+pnpm install
 
 # 4. Restart service
-npm run service:restart:daemon
+pnpm run service:restart:daemon
 
 # 5. Check service status
-npm run service:status
+pnpm run service:status
 ```
 
 **Important Notes:**

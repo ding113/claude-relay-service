@@ -229,11 +229,11 @@ class ServiceManager {
     console.log(`
 🔧 Claude Relay Service 进程管理器
 
-用法: npm run service <command> [options]
+用法: pnpm run service <command> [options]
 
 重要提示：
-  如果要传递参数，请在npm run命令中使用 -- 分隔符
-  npm run service <command> -- [options]
+  如果要传递参数，请在pnpm run命令中使用 -- 分隔符
+  pnpm run service <command> -- [options]
 
 命令:
   start [-d|--daemon]   启动服务 (-d: 后台运行)
@@ -252,21 +252,21 @@ class ServiceManager {
   h, help               显示帮助
 
 示例:
-  npm run service start              # 前台启动
-  npm run service -- start -d        # 后台启动（正确方式）
-  npm run service:start:d            # 后台启动（推荐快捷方式）
-  npm run service:daemon             # 后台启动（推荐快捷方式）
-  npm run service stop               # 停止服务
-  npm run service -- restart -d      # 后台重启（正确方式）
-  npm run service:restart:d          # 后台重启（推荐快捷方式）
-  npm run service status             # 查看状态
-  npm run service logs               # 查看日志
-  npm run service -- logs 100        # 查看最近100行日志
+  pnpm run service start              # 前台启动
+  pnpm run service -- start -d        # 后台启动（正确方式）
+  pnpm run service:start:d            # 后台启动（推荐快捷方式）
+  pnpm run service:daemon             # 后台启动（推荐快捷方式）
+  pnpm run service stop               # 停止服务
+  pnpm run service -- restart -d      # 后台重启（正确方式）
+  pnpm run service:restart:d          # 后台重启（推荐快捷方式）
+  pnpm run service status             # 查看状态
+  pnpm run service logs               # 查看日志
+  pnpm run service -- logs 100        # 查看最近100行日志
 
 推荐的快捷方式（无需 -- 分隔符）:
-  npm run service:start:d            # 等同于 npm run service -- start -d
-  npm run service:restart:d          # 等同于 npm run service -- restart -d
-  npm run service:daemon             # 等同于 npm run service -- start -d
+  pnpm run service:start:d            # 等同于 pnpm run service -- start -d
+  pnpm run service:restart:d          # 等同于 pnpm run service -- restart -d
+  pnpm run service:daemon             # 等同于 pnpm run service -- start -d
 
 直接使用脚本（推荐）:
   node scripts/manage.js start -d    # 后台启动

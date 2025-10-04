@@ -54,16 +54,16 @@ help:
 # 安装和初始化
 install:
 	@echo "📦 安装项目依赖..."
-	npm install
+	pnpm install
 
 install-web:
 	@echo "📦 安装 Web 界面依赖..."
-	npm run install:web
+	pnpm run install:web
 
 # 前端构建
 build-web:
 	@echo "🎨 构建 Web 管理界面..."
-	npm run build:web
+	pnpm run build:web
 
 build-all: install install-web build-web
 	@echo "🎉 完整项目构建完成！"
@@ -72,7 +72,7 @@ setup:
 	@echo "⚙️  初始化项目配置和管理员凭据..."
 	@if [ ! -f config/config.js ]; then cp config/config.example.js config/config.js; fi
 	@if [ ! -f .env ]; then cp .env.example .env; fi
-	npm run setup
+	pnpm run setup
 
 clean:
 	@echo "🧹 清理依赖和构建文件..."
@@ -85,19 +85,19 @@ clean:
 # 开发和运行
 dev:
 	@echo "🚀 启动开发模式（热重载）..."
-	npm run dev
+	pnpm run dev
 
 start:
 	@echo "🚀 启动生产模式..."
-	npm start
+	pnpm start
 
 test:
 	@echo "🧪 运行测试套件..."
-	npm test
+	pnpm test
 
 lint:
 	@echo "🔍 执行代码风格检查..."
-	npm run lint
+	pnpm run lint
 
 # Docker 部署
 docker-up:
@@ -119,52 +119,52 @@ docker-logs:
 # 服务管理
 service-start:
 	@echo "🚀 前台启动服务..."
-	npm run service:start
+	pnpm run service:start
 
 service-daemon:
 	@echo "🔧 后台启动服务（守护进程）..."
-	npm run service:start:daemon
+	pnpm run service:start:daemon
 
 service-stop:
 	@echo "🛑 停止服务..."
-	npm run service:stop
+	pnpm run service:stop
 
 service-restart:
 	@echo "🔄 重启服务..."
-	npm run service:restart
+	pnpm run service:restart
 
 service-restart-daemon:
 	@echo "🔄 重启服务（守护进程）..."
-	npm run service:restart:daemon
+	pnpm run service:restart:daemon
 
 service-status:
 	@echo "📊 查看服务状态..."
-	npm run service:status
+	pnpm run service:status
 
 logs:
 	@echo "📋 查看应用日志..."
-	npm run service:logs
+	pnpm run service:logs
 
 logs-follow:
 	@echo "📋 实时查看日志..."
-	npm run service:logs:follow
+	pnpm run service:logs:follow
 
 # CLI 管理工具
 cli-admin:
 	@echo "👤 启动管理员操作 CLI..."
-	npm run cli admin
+	pnpm run cli admin
 
 cli-keys:
 	@echo "🔑 启动 API Key 管理 CLI..."
-	npm run cli keys
+	pnpm run cli keys
 
 cli-accounts:
 	@echo "👥 启动 Claude 账户管理 CLI..."
-	npm run cli accounts
+	pnpm run cli accounts
 
 cli-status:
 	@echo "📊 查看系统状态..."
-	npm run cli status
+	pnpm run cli status
 
 # 开发辅助命令
 check-config:
@@ -221,24 +221,24 @@ tail-logs:
 # 开发工具
 format:
 	@echo "🎨 格式化代码..."
-	npm run lint -- --fix
+	pnpm run lint -- --fix
 
 check-deps:
 	@echo "🔍 检查依赖更新..."
-	npm outdated
+	pnpm outdated
 
 update-deps:
 	@echo "⬆️  更新依赖..."
-	npm update
+	pnpm update
 
 # 测试相关
 test-coverage:
 	@echo "📊 运行测试覆盖率..."
-	npm test -- --coverage
+	pnpm test -- --coverage
 
 test-watch:
 	@echo "👀 监视模式运行测试..."
-	npm test -- --watch
+	pnpm test -- --watch
 
 # Git 相关
 git-status:
@@ -252,8 +252,8 @@ git-pull:
 # 安全检查
 security-audit:
 	@echo "🔒 执行安全审计..."
-	npm audit
+	pnpm audit
 
 security-fix:
 	@echo "🔧 修复安全漏洞..."
-	npm audit fix
+	pnpm audit fix

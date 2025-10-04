@@ -43,11 +43,11 @@ test_build_and_push() {
     # 检查 node_modules
     if [ ! -d "node_modules" ]; then
         print_info "安装前端依赖..."
-        npm install
+        pnpm install
     fi
-    
+
     # 执行构建
-    npm run build
+    pnpm run build
     
     if [ ! -d "dist" ]; then
         print_error "构建失败，dist 目录不存在"

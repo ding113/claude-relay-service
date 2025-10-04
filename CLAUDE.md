@@ -76,11 +76,11 @@ npm run service:stop          # 停止服务
 - `REDIS_PORT`: Redis端口（默认6379）
 - `REDIS_PASSWORD`: Redis密码（可选）
 
-初始化命令：
+### 初始化命令：
 ```bash
 cp config/config.example.js config/config.js
 cp .env.example .env
-npm run setup  # 自动生成密钥并创建管理员账户
+pnpm run setup  # 自动生成密钥并创建管理员账户
 ````
 
 ## Web界面功能

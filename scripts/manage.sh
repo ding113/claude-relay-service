@@ -255,12 +255,18 @@ install_dependencies() {
         print_success "Node.js 版本检查通过: $(node -v)"
     fi
     
-    # 检查 npm
-    if ! command_exists npm; then
-        print_error "npm 未安装"
-        return 1
+    # 检查 pnpm
+    if ! command_exists pnpm; then
+        print_warning "pnpm 未安装，正在通过 corepack 启用..."
+        corepack enable
+        corepack prepare pnpm@latest --activate
+    fi
+
+    if command_exists pnpm; then
+        print_success "pnpm 版本: $(pnpm -v)"
     else
-        print_success "npm 版本: $(npm -v)"
+        print_error "pnpm 安装失败"
+        return 1
     fi
     
     return 0
@@ -417,9 +423,9 @@ install_service() {
     # 进入项目目录
     cd "$APP_DIR"
     
-    # 安装npm依赖
+    # 安装pnpm依赖
     print_info "安装项目依赖..."
-    npm install
+    pnpm install
     
     # 确保脚本有执行权限（仅在权限不正确时设置）
     if [ -f "$APP_DIR/scripts/manage.sh" ] && [ ! -x "$APP_DIR/scripts/manage.sh" ]; then
@@ -458,7 +464,7 @@ EOF
     
     # 运行setup命令
     print_info "运行初始化设置..."
-    npm run setup
+    pnpm run setup
     
     # 获取预构建的前端文件
     print_info "获取预构建的前端文件..."
@@ -496,15 +502,15 @@ EOF
         print_success "前端文件下载完成"
     else
         print_warning "web-dist 分支不存在，尝试本地构建..."
-        
-        # 检查是否有 Node.js 和 npm
-        if command_exists npm; then
+
+        # 检查是否有 Node.js 和 pnpm
+        if command_exists pnpm; then
             # 回退到原始构建方式
             if [ -f "web/admin-spa/package.json" ]; then
                 print_info "开始本地构建前端..."
                 cd web/admin-spa
-                npm install
-                npm run build
+                pnpm install
+                pnpm run build
                 cd ../..
                 print_success "前端本地构建完成"
             else
@@ -637,7 +643,7 @@ update_service() {
     
     # 更新依赖
     print_info "更新依赖..."
-    npm install
+    pnpm install
     
     # 确保脚本有执行权限（仅在权限不正确时设置）
     if [ -f "$APP_DIR/scripts/manage.sh" ] && [ ! -x "$APP_DIR/scripts/manage.sh" ]; then
@@ -717,15 +723,15 @@ update_service() {
         print_success "前端文件更新完成"
     else
         print_warning "web-dist 分支不存在，尝试本地构建..."
-        
-        # 检查是否有 Node.js 和 npm
-        if command_exists npm; then
+
+        # 检查是否有 Node.js 和 pnpm
+        if command_exists pnpm; then
             # 回退到原始构建方式
             if [ -f "web/admin-spa/package.json" ]; then
                 print_info "开始本地构建前端..."
                 cd web/admin-spa
-                npm install
-                npm run build
+                pnpm install
+                pnpm run build
                 cd ../..
                 print_success "前端本地构建完成"
             else
@@ -1006,7 +1012,7 @@ update_model_pricing() {
     cd "$APP_DIR"
     
     # 运行更新脚本
-    if npm run update:pricing; then
+    if pnpm run update:pricing; then
         print_success "模型价格数据更新完成"
         
         # 显示更新后的信息
@@ -1179,7 +1185,7 @@ switch_branch() {
     # 更新依赖（如果package.json有变化）
     if git diff "$current_branch..$target_branch" --name-only | grep -q "package.json"; then
         print_info "检测到 package.json 变化，更新依赖..."
-        npm install
+        pnpm install
     fi
     
     # 更新前端文件（如果切换到不同版本）

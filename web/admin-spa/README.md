@@ -4,8 +4,8 @@
 
 ## 开发环境要求
 
-- Node.js >= 16
-- npm >= 7
+- Node.js >= 18
+- pnpm >= 9 (通过 `corepack enable` 启用)
 
 ## 安装和运行
 
@@ -13,13 +13,13 @@
 
 ```bash
 cd web/admin-spa
-npm install
+pnpm install
 ```
 
 ### 2. 开发模式运行
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 **重要提示：**
@@ -31,7 +31,7 @@ npm run dev
 ### 3. 生产构建
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 构建产物将输出到 `dist` 目录。
@@ -39,7 +39,7 @@ npm run build
 ### 4. 预览生产构建
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 ## 项目结构
@@ -109,11 +109,11 @@ VITE_HTTP_PROXY=http://127.0.0.1:7890
 ```bash
 # Linux/Mac
 export VITE_HTTP_PROXY=http://127.0.0.1:7890
-npm run dev
+pnpm run dev
 
 # Windows
 set VITE_HTTP_PROXY=http://127.0.0.1:7890
-npm run dev
+pnpm run dev
 ```
 
 注意：`.env.development.local` 文件不会被提交到版本控制，适合存放本地特定的配置。
@@ -128,10 +128,10 @@ npm run dev
 A: 这是正常的。应用配置在 `/web/admin/` 路径下，必须访问完整路径：http://localhost:3001/web/admin/
 
 ### Q: 登录时 API 请求失败（500错误）？
-A: 
+A:
 1. **确保主服务运行**：Claude Relay Service 必须运行在 http://localhost:3000
 2. **检查代理配置**：Vite 会自动代理 `/admin` 和 `/api` 请求到 3000 端口
-3. **重启开发服务器**：如果修改了配置，需要重启 `npm run dev`
+3. **重启开发服务器**：如果修改了配置，需要重启 `pnpm run dev`
 4. **测试代理**：运行 `node test-proxy.js` 检查代理是否正常工作
 
 ### Q: 如何处理开发和生产环境的 API 配置？
@@ -141,7 +141,7 @@ A:
 - 两种环境都使用相同的 API 路径，通过环境变量自动切换
 
 ### Q: 如何部署到生产环境？
-A: 
-1. 运行 `npm run build` 构建项目
+A:
+1. 运行 `pnpm run build` 构建项目
 2. 将 `dist` 目录内容复制到服务器的 `/web/admin/` 路径
 3. 确保服务器配置了 SPA 路由回退规则

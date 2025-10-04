@@ -86,9 +86,9 @@ async function setup() {
     }
 
     console.log(chalk.blue('🚀 启动服务：\n'))
-    console.log('   npm start              - 启动生产服务')
-    console.log('   npm run dev            - 启动开发服务')
-    console.log('   npm run cli admin      - 管理员CLI工具\n')
+    console.log('   pnpm start              - 启动生产服务')
+    console.log('   pnpm run dev            - 启动开发服务')
+    console.log('   pnpm run cli admin      - 管理员CLI工具\n')
 
     console.log(chalk.blue('🌐 访问地址：\n'))
     console.log(`   Web管理界面: http://localhost:${config.server.port}/web`)
@@ -111,9 +111,9 @@ function checkInitialized() {
     console.log(`   管理员用户名: ${initData.adminUsername}`)
     console.log('\n如需重新初始化，请删除 data/init.json 文件后再运行此命令。')
     console.log(chalk.red('\n⚠️  重要提示：'))
-    console.log('   1. 删除 init.json 文件后运行 npm run setup')
+    console.log('   1. 删除 init.json 文件后运行 pnpm run setup')
     console.log('   2. 生成新的账号密码后，需要重启服务才能生效')
-    console.log('   3. 使用 npm run service:restart 重启服务\n')
+    console.log('   3. 使用 pnpm run service:restart 重启服务\n')
     return true
   }
   return false

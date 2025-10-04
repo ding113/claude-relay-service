@@ -377,7 +377,7 @@ class Application {
       const initFilePath = path.join(__dirname, '..', 'data', 'init.json')
 
       if (!fs.existsSync(initFilePath)) {
-        logger.warn('⚠️ No admin credentials found. Please run npm run setup first.')
+        logger.warn('⚠️ No admin credentials found. Please run pnpm run setup first.')
         return
       }
 

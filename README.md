@@ -94,6 +94,7 @@
 ### 软件要求
 
 - **Node.js** 18或更高版本
+- **pnpm** 9或更高版本（通过 `corepack enable` 启用）
 - **Redis** 6或更高版本
 - **操作系统**: 建议Linux
 
@@ -200,8 +201,12 @@ sudo systemctl start redis
 git clone https://github.com/ding113/claude-relay-service.git
 cd claude-relay-service
 
+# 启用 pnpm (Node.js 18+ 内置 corepack)
+corepack enable
+corepack prepare pnpm@latest --activate
+
 # 安装依赖
-npm install
+pnpm install
 
 # 复制配置文件（重要！）
 cp config/config.example.js config/config.js
@@ -244,26 +249,26 @@ module.exports = {
 
 ```bash
 # 安装前端依赖
-npm run install:web
+pnpm run install:web
 
 # 构建前端（生成 dist 目录）
-npm run build:web
+pnpm run build:web
 ```
 
 ### 第五步：启动服务
 
 ```bash
 # 初始化
-npm run setup # 会随机生成后台账号密码信息，存储在 data/init.json
+pnpm run setup # 会随机生成后台账号密码信息，存储在 data/init.json
 # 或者通过环境变量预设管理员凭据：
 # export ADMIN_USERNAME=cr_admin_custom
 # export ADMIN_PASSWORD=your-secure-password
 
 # 启动服务
-npm run service:start:daemon   # 后台运行
+pnpm run service:start:daemon   # 后台运行
 
 # 查看状态
-npm run service:status
+pnpm run service:status
 ```
 
 ---
@@ -529,16 +534,16 @@ gpt-5                      # Codex使用固定模型ID
 
 ```bash
 # 查看服务状态
-npm run service:status
+pnpm run service:status
 
 # 查看日志
-npm run service:logs
+pnpm run service:logs
 
 # 重启服务
-npm run service:restart:daemon
+pnpm run service:restart:daemon
 
 # 停止服务
-npm run service:stop
+pnpm run service:stop
 ```
 
 ### 监控使用情况
@@ -558,22 +563,22 @@ cd claude-relay-service
 # 2. 拉取最新代码
 git pull origin main
 
-# 如果遇到 package-lock.json 冲突，使用远程版本
-git checkout --theirs package-lock.json
-git add package-lock.json
+# 如果遇到 pnpm-lock.yaml 冲突，使用远程版本
+git checkout --theirs pnpm-lock.yaml
+git add pnpm-lock.yaml
 
 # 3. 安装新的依赖（如果有）
-npm install
+pnpm install
 
 # 4. 安装并构建前端
-npm run install:web
-npm run build:web
+pnpm run install:web
+pnpm run build:web
 
 # 5. 重启服务
-npm run service:restart:daemon
+pnpm run service:restart:daemon
 
 # 6. 检查服务状态
-npm run service:status
+pnpm run service:status
 ```
 
 **注意事项：**

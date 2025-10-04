@@ -4,17 +4,20 @@ FROM node:18-alpine AS frontend-builder
 # 📁 设置工作目录
 WORKDIR /app/web/admin-spa
 
+# 📦 安装 pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # 📦 复制前端依赖文件
-COPY web/admin-spa/package*.json ./
+COPY web/admin-spa/package.json web/admin-spa/pnpm-lock.yaml ./
 
 # 🔽 安装前端依赖
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # 📋 复制前端源代码
 COPY web/admin-spa/ ./
 
 # 🏗️ 构建前端
-RUN npm run build
+RUN pnpm run build
 
 # 🐳 主应用阶段
 FROM node:18-alpine
@@ -34,12 +37,15 @@ RUN apk add --no-cache \
 # 📁 设置工作目录
 WORKDIR /app
 
+# 📦 安装 pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # 📦 复制 package 文件
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # 🔽 安装依赖 (生产环境)
-RUN npm ci --only=production && \
-    npm cache clean --force
+RUN pnpm install --prod --frozen-lockfile && \
+    pnpm store prune
 
 # 📋 复制应用代码
 COPY . .
