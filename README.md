@@ -6,26 +6,12 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Redis](https://img.shields.io/badge/Redis-6+-red.svg)](https://redis.io/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
-[![Docker Build](https://github.com/Wei-Shaw/claude-relay-service/actions/workflows/auto-release-pipeline.yml/badge.svg)](https://github.com/Wei-Shaw/claude-relay-service/actions/workflows/auto-release-pipeline.yml)
-[![Docker Pulls](https://img.shields.io/docker/pulls/weishaw/claude-relay-service)](https://hub.docker.com/r/weishaw/claude-relay-service)
+[![Docker Build](https://github.com/ding113/claude-relay-service/actions/workflows/docker-build.yml/badge.svg)](https://github.com/ding113/claude-relay-service/actions/workflows/docker-build.yml)
+[![Docker Image](https://img.shields.io/badge/Docker-ghcr.io-blue.svg)](https://github.com/ding113/claude-relay-service/pkgs/container/claude-relay-service)
 
 **🔐 自行搭建Claude API中转服务，支持多账户管理**
 
-[English](README_EN.md) • [快速开始](https://pincc.ai/) • [演示站点](https://demo.pincc.ai/admin-next/login) • [公告频道](https://t.me/claude_relay_service)
-
-</div>
-
----
-
-## 💎 Claude/Codex 拼车服务推荐
-
-<div align="center">
-
-| 平台 | 类型 | 服务 | 介绍 |
-|:---|:---|:---|:---|
-| **[pincc.ai](https://pincc.ai/)** | 🏆 **官方运营** | <small>✅ Claude Code<br>✅ Codex CLI</small> | 项目直营，提供稳定的 Claude Code / Codex CLI 拼车服务 |
-| **[ctok.ai](https://ctok.ai/)** | 🤝 合作伙伴 | <small>✅ Claude Code<br>✅ Codex CLI</small> | 社区认证，提供 Claude Code / Codex CLI 拼车 |
-
+[English](README_EN.md)
 
 </div>
 
@@ -126,7 +112,7 @@
 ### 快速安装
 
 ```bash
-curl -fsSL https://pincc.ai/manage.sh -o manage.sh && chmod +x manage.sh && ./manage.sh install
+curl -fsSL https://raw.githubusercontent.com/ding113/claude-relay-service/main/scripts/manage.sh -o manage.sh && chmod +x manage.sh && ./manage.sh install
 ```
 
 ### 脚本功能
@@ -211,7 +197,7 @@ sudo systemctl start redis
 
 ```bash
 # 下载项目
-git clone https://github.com/Wei-Shaw//claude-relay-service.git
+git clone https://github.com/ding113/claude-relay-service.git
 cd claude-relay-service
 
 # 安装依赖
@@ -286,9 +272,11 @@ npm run service:status
 
 ### Docker compose
 
-#### 第一步：下载构建docker-compose.yml文件的脚本并执行
+#### 第一步：准备环境变量文件
 ```bash
-curl -fsSL https://pincc.ai/crs-compose.sh -o crs-compose.sh && chmod +x crs-compose.sh && ./crs-compose.sh
+# 创建 .env 文件并配置必要的环境变量
+cp .env.example .env
+# 编辑 .env 文件，设置 JWT_SECRET 和 ENCRYPTION_KEY
 ```
 
 #### 第二步：启动

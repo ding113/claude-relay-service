@@ -6,10 +6,12 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Redis](https://img.shields.io/badge/Redis-6+-red.svg)](https://redis.io/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![Docker Build](https://github.com/ding113/claude-relay-service/actions/workflows/docker-build.yml/badge.svg)](https://github.com/ding113/claude-relay-service/actions/workflows/docker-build.yml)
+[![Docker Image](https://img.shields.io/badge/Docker-ghcr.io-blue.svg)](https://github.com/ding113/claude-relay-service/pkgs/container/claude-relay-service)
 
-**🔐 Self-hosted Claude API relay service with multi-account management** 
+**🔐 Self-hosted Claude API relay service with multi-account management**
 
-[中文文档](README.md) • [Preview](https://demo.pincc.ai/admin-next/login) • [Telegram Channel](https://t.me/claude_relay_service)
+[中文文档](README.md)
 
 </div>
 
@@ -145,7 +147,7 @@ sudo systemctl start redis
 
 ```bash
 # Download project
-git clone https://github.com/Wei-Shaw/claude-relay-service.git
+git clone https://github.com/ding113/claude-relay-service.git
 cd claude-relay-service
 
 # Install dependencies
