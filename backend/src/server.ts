@@ -5,6 +5,7 @@ import { config, isDev } from './core/config'
 import logger from './core/logger'
 import redisClient from './core/redis/client'
 import { registerJWT } from './core/plugins/jwt'
+import { registerSwagger } from './core/plugins/swagger'
 import { healthRoutes } from './modules/health/route'
 import { authRoutes } from './modules/auth/route'
 import { apikeyRoutes } from './modules/apikey/route'
@@ -42,8 +43,9 @@ fastify.register(helmet, {
   crossOriginEmbedderPolicy: false
 })
 
-// Register JWT plugin
+// Register plugins
 fastify.register(registerJWT)
+fastify.register(registerSwagger)
 
 // Register routes
 fastify.register(healthRoutes)

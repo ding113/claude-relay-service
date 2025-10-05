@@ -26,6 +26,9 @@ export async function authRoutes(fastify: FastifyInstance) {
     '/api/v2/auth/admin/login',
     {
       schema: {
+        description: 'Authenticate as admin and receive JWT token for subsequent requests',
+        tags: ['Authentication'],
+        summary: 'Admin Login',
         body: {
           type: 'object',
           required: ['username', 'password'],
@@ -72,6 +75,10 @@ export async function authRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Get current authenticated user information',
+        tags: ['Authentication'],
+        summary: 'Get Current User',
+        security: [{ bearerAuth: [] }],
         response: {
           200: {
             type: 'object',
@@ -108,6 +115,10 @@ export async function authRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Change admin password (requires current password verification)',
+        tags: ['Authentication'],
+        summary: 'Change Password',
+        security: [{ bearerAuth: [] }],
         body: {
           type: 'object',
           required: ['currentPassword', 'newPassword'],

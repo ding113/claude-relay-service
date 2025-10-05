@@ -19,7 +19,49 @@ interface HealthResponse {
 }
 
 export async function healthRoutes(fastify: FastifyInstance) {
-  fastify.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/health', {
+    schema: {
+      description: 'Check service health status including Redis connection',
+      tags: ['Health'],
+      summary: 'Health Check',
+      response: {
+        200: {
+          description: 'Service is healthy',
+          type: 'object',
+          properties: {
+            status: { type: 'string', enum: ['healthy', 'unhealthy'] },
+            service: { type: 'string' },
+            version: { type: 'string' },
+            timestamp: { type: 'string', format: 'date-time' },
+            uptime: { type: 'number' },
+            environment: { type: 'string' },
+            components: {
+              type: 'object',
+              properties: {
+                redis: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    connected: { type: 'boolean' },
+                    db: { type: 'number' }
+                  }
+                }
+              }
+            }
+          }
+        },
+        503: {
+          description: 'Service is unhealthy',
+          type: 'object',
+          properties: {
+            status: { type: 'string' },
+            error: { type: 'string' },
+            timestamp: { type: 'string' }
+          }
+        }
+      }
+    }
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Check Redis connection
       const redisConnected = await redisClient.ping()

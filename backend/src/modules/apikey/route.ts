@@ -36,6 +36,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Create a new API Key with custom configuration including rate limits, cost limits, and permissions',
+        tags: ['API Keys'],
+        summary: 'Create API Key',
+        security: [{ bearerAuth: [] }],
         body: {
           type: 'object',
           properties: {
@@ -100,6 +104,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'List all API Keys with optional filters for active status, permissions, and deleted state',
+        tags: ['API Keys'],
+        summary: 'List API Keys',
+        security: [{ bearerAuth: [] }],
         querystring: {
           type: 'object',
           properties: {
@@ -167,6 +175,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Get detailed information about a specific API Key including configuration and status',
+        tags: ['API Keys'],
+        summary: 'Get API Key Details',
+        security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
           required: ['id'],
@@ -218,6 +230,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Update API Key configuration including name, permissions, limits, and account bindings',
+        tags: ['API Keys'],
+        summary: 'Update API Key',
+        security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
           required: ['id'],
@@ -295,6 +311,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Soft delete an API Key (can be restored later). Marks key as deleted and deactivates it',
+        tags: ['API Keys'],
+        summary: 'Delete API Key',
+        security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
           required: ['id'],
@@ -344,6 +364,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Restore a previously deleted API Key back to active state',
+        tags: ['API Keys'],
+        summary: 'Restore API Key',
+        security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
           required: ['id'],
@@ -391,6 +415,10 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     {
       preHandler: fastify.authenticate,
       schema: {
+        description: 'Get usage statistics for an API Key including request counts, token usage, and costs',
+        tags: ['API Keys'],
+        summary: 'Get API Key Statistics',
+        security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
           required: ['id'],
