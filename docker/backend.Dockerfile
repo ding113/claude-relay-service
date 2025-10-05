@@ -8,24 +8,32 @@ RUN corepack enable && corepack prepare pnpm@10.18.0 --activate
 FROM base AS deps
 WORKDIR /app
 
-# Copy backend package files
-COPY backend/package.json backend/pnpm-lock.yaml ./backend/
+# Copy workspace config, lockfile, and pnpm config (monorepo)
+COPY .npmrc pnpm-workspace.yaml pnpm-lock.yaml ./
 
-# Install dependencies
-RUN cd backend && pnpm install --frozen-lockfile
+# Copy backend package files
+COPY backend/package.json ./backend/
+
+# Install all workspace dependencies
+RUN pnpm install --frozen-lockfile
 
 # Build stage
 FROM base AS builder
 WORKDIR /app
 
-# Copy dependencies
+# Copy pnpm workspace config (needed for pnpm commands)
+COPY .npmrc pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY backend/package.json ./backend/
+
+# Copy all dependencies (monorepo needs root node_modules)
+COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/backend/node_modules ./backend/node_modules
 
 # Copy source
 COPY backend/ ./backend/
 
 # Build
-RUN cd backend && pnpm build
+RUN pnpm --filter backend build
 
 # Production stage
 FROM node:20-alpine AS runner
