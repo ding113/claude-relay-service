@@ -7,6 +7,7 @@ import redisClient from './core/redis/client'
 import { registerJWT } from './core/plugins/jwt'
 import { healthRoutes } from './modules/health/route'
 import { authRoutes } from './modules/auth/route'
+import { apikeyRoutes } from './modules/apikey/route'
 
 const fastify = Fastify({
   logger: isDev
@@ -47,6 +48,7 @@ fastify.register(registerJWT)
 // Register routes
 fastify.register(healthRoutes)
 fastify.register(authRoutes)
+fastify.register(apikeyRoutes)
 
 // Graceful shutdown
 const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM']
