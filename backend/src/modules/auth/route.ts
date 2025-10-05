@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import fp from 'fastify-plugin'
 import { AuthService } from './service'
 import { LoginRequest } from '@/shared/types'
 
@@ -157,3 +158,5 @@ export async function authRoutes(fastify: FastifyInstance) {
     }
   )
 }
+
+export default fp(authRoutes)

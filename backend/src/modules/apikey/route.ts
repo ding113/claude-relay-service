@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import fp from 'fastify-plugin'
 import { ApiKeyService } from './service'
 import type { CreateApiKeyOptions, UpdateApiKeyOptions } from '@/shared/types'
 
@@ -454,3 +455,5 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
     }
   )
 }
+
+export default fp(apikeyRoutes)

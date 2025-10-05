@@ -4,11 +4,13 @@ import helmet from '@fastify/helmet'
 import { config, isDev } from './core/config'
 import logger from './core/logger'
 import redisClient from './core/redis/client'
+import swagger from '@fastify/swagger'
+import swaggerUI from '@fastify/swagger-ui'
 import { registerJWT } from './core/plugins/jwt'
-import { registerSwagger } from './core/plugins/swagger'
-import { healthRoutes } from './modules/health/route'
-import { authRoutes } from './modules/auth/route'
-import { apikeyRoutes } from './modules/apikey/route'
+import healthRoutes from './modules/health/route'
+import authRoutes from './modules/auth/route'
+import apikeyRoutes from './modules/apikey/route'
+import accountRoutes from './modules/account/route'
 
 const fastify = Fastify({
   logger: isDev
@@ -31,26 +33,6 @@ const fastify = Fastify({
   disableRequestLogging: false,
   trustProxy: true
 })
-
-// Register plugins
-fastify.register(cors, {
-  origin: isDev ? true : false,
-  credentials: true
-})
-
-fastify.register(helmet, {
-  contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false
-})
-
-// Register plugins
-fastify.register(registerJWT)
-fastify.register(registerSwagger)
-
-// Register routes
-fastify.register(healthRoutes)
-fastify.register(authRoutes)
-fastify.register(apikeyRoutes)
 
 // Graceful shutdown
 const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM']
@@ -77,9 +59,71 @@ signals.forEach((signal) => {
 // Start server
 const start = async () => {
   try {
-    // Connect to Redis
+    // Connect to Redis FIRST (authRoutes initialization needs it)
     logger.info('Connecting to Redis...')
     await redisClient.connect()
+
+    // Register plugins with await to ensure proper order
+    logger.info('Registering plugins...')
+
+    await fastify.register(cors, {
+      origin: isDev ? true : false,
+      credentials: true
+    })
+
+    await fastify.register(helmet, {
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false
+    })
+
+    // Register JWT plugin
+    await fastify.register(registerJWT)
+
+    // Register Swagger directly (MUST complete before routes)
+    await fastify.register(swagger, {
+      mode: 'dynamic',
+      openapi: {
+        info: {
+          title: 'Claude Relay Service v2 API',
+          description: 'Enterprise-grade AI API Gateway',
+          version: '2.0.0'
+        },
+        servers: [{ url: `http://${config.HOST}:${config.PORT}`, description: 'Development' }],
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT'
+            }
+          }
+        },
+        tags: [
+          { name: 'Health', description: 'Health check' },
+          { name: 'Authentication', description: 'Admin auth' },
+          { name: 'API Keys', description: 'API Key management' },
+          { name: 'Accounts', description: 'Account management' }
+        ]
+      }
+    })
+
+    await fastify.register(swaggerUI, {
+      routePrefix: '/docs',
+      uiConfig: {
+        docExpansion: 'list',
+        deepLinking: true
+      }
+    })
+
+    // Register routes (Swagger onRoute hook is now ready)
+    await fastify.register(healthRoutes)
+    await fastify.register(authRoutes)
+    await fastify.register(apikeyRoutes)
+    await fastify.register(accountRoutes)
+
+    // Wait for all plugins and routes to load
+    await fastify.ready()
+    logger.info('All plugins and routes loaded')
 
     // Start HTTP server
     await fastify.listen({
@@ -90,6 +134,7 @@ const start = async () => {
     logger.info(`v2 Backend started on ${config.HOST}:${config.PORT}`)
     logger.info(`Environment: ${config.NODE_ENV}`)
     logger.info(`Health check: http://${config.HOST}:${config.PORT}/health`)
+    logger.info(`Swagger docs: http://${config.HOST}:${config.PORT}/docs`)
   } catch (error) {
     logger.error(error)
     process.exit(1)

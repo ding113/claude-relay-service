@@ -5,6 +5,7 @@ import { config } from '@/core/config'
 
 export async function registerSwagger(fastify: FastifyInstance) {
   await fastify.register(swagger, {
+    mode: 'dynamic',
     openapi: {
       info: {
         title: 'Claude Relay Service v2 API',
@@ -47,6 +48,10 @@ export async function registerSwagger(fastify: FastifyInstance) {
         {
           name: 'API Keys',
           description: 'API Key CRUD operations and usage statistics'
+        },
+        {
+          name: 'Accounts',
+          description: 'Account management for Claude Console and Codex platforms'
         }
       ]
     }

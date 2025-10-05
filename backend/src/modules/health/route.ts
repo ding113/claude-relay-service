@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import fp from 'fastify-plugin'
 import redisClient from '@/core/redis/client'
 import { config } from '@/core/config'
 
@@ -96,3 +97,5 @@ export async function healthRoutes(fastify: FastifyInstance) {
     }
   })
 }
+
+export default fp(healthRoutes)
