@@ -66,7 +66,10 @@ export const REDIS_KEYS = {
     `unified_claude_session_mapping:${sessionHash}`,
 
   // 系统指标
-  SYSTEM_METRICS_MINUTE: (minuteTimestamp: number) => `system:metrics:minute:${minuteTimestamp}`
+  SYSTEM_METRICS_MINUTE: (minuteTimestamp: number) => `system:metrics:minute:${minuteTimestamp}`,
+
+  // 管理员相关
+  ADMIN_CREDENTIALS: 'admin:credentials'
 } as const
 
 /**

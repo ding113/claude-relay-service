@@ -595,3 +595,4 @@ npm run migrate:v1-to-v2
 **文档版本**: v2.0
 **最后更新**: 2025-10-04
 **维护者**: Claude Code Team
+- 项目使用pnpm.

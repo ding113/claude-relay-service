@@ -4,7 +4,9 @@ import helmet from '@fastify/helmet'
 import { config, isDev } from './core/config'
 import logger from './core/logger'
 import redisClient from './core/redis/client'
+import { registerJWT } from './core/plugins/jwt'
 import { healthRoutes } from './modules/health/route'
+import { authRoutes } from './modules/auth/route'
 
 const fastify = Fastify({
   logger: isDev
@@ -39,8 +41,12 @@ fastify.register(helmet, {
   crossOriginEmbedderPolicy: false
 })
 
+// Register JWT plugin
+fastify.register(registerJWT)
+
 // Register routes
 fastify.register(healthRoutes)
+fastify.register(authRoutes)
 
 // Graceful shutdown
 const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM']
