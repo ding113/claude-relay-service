@@ -34,7 +34,7 @@ COPY v2/frontend/ ./v2/frontend/
 ARG NEXT_PUBLIC_API_URL=http://localhost:4000
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-RUN cd v2/frontend && pnpm build
+RUN cd v2/frontend && pnpm build && mkdir -p public
 
 # Production stage
 FROM node:20-alpine AS runner
