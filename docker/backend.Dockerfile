@@ -56,7 +56,7 @@ COPY --chown=nodejs:nodejs backend/package.json ./backend/
 COPY --from=deps --chown=nodejs:nodejs /app/backend/node_modules ./backend/node_modules
 
 # Copy built application
-COPY --from=builder --chown=nodejs:nodejs /app/backend/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/backend/dist ./backend/dist
 
 # Create logs directory
 RUN mkdir -p logs && chown nodejs:nodejs logs
@@ -69,4 +69,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:4000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/server.js"]
+CMD ["node", "backend/dist/server.js"]

@@ -27,7 +27,6 @@ COPY frontend/package.json ./frontend/
 
 # Copy all dependencies (monorepo needs root node_modules)
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
 
 # Copy source
 COPY frontend/ ./frontend/
