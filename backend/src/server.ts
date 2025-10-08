@@ -11,6 +11,7 @@ import healthRoutes from './modules/health/route'
 import authRoutes from './modules/auth/route'
 import apikeyRoutes from './modules/apikey/route'
 import accountRoutes from './modules/account/route'
+import relayRoutes from './modules/relay/route'
 
 const fastify = Fastify({
   logger: isDev
@@ -102,7 +103,8 @@ const start = async () => {
           { name: 'Health', description: 'Health check' },
           { name: 'Authentication', description: 'Admin auth' },
           { name: 'API Keys', description: 'API Key management' },
-          { name: 'Accounts', description: 'Account management' }
+          { name: 'Accounts', description: 'Account management' },
+          { name: 'Relay', description: 'API forwarding and relay' }
         ]
       }
     })
@@ -120,6 +122,7 @@ const start = async () => {
     await fastify.register(authRoutes)
     await fastify.register(apikeyRoutes)
     await fastify.register(accountRoutes)
+    await fastify.register(relayRoutes)
 
     // Wait for all plugins and routes to load
     await fastify.ready()
