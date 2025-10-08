@@ -1,9 +1,10 @@
 import { FastifyInstance } from 'fastify'
+import fastifyPlugin from 'fastify-plugin'
 import fastifyJwt from '@fastify/jwt'
 import { config } from '@/core/config'
 import { JWTPayload } from '@/shared/types'
 
-export async function registerJWT(fastify: FastifyInstance) {
+async function jwtPlugin(fastify: FastifyInstance) {
   await fastify.register(fastifyJwt, {
     secret: config.JWT_SECRET,
     sign: {
@@ -22,6 +23,11 @@ export async function registerJWT(fastify: FastifyInstance) {
     }
   })
 }
+
+export const registerJWT = fastifyPlugin(jwtPlugin, {
+  name: 'jwt-plugin',
+  fastify: '5.x'
+})
 
 declare module 'fastify' {
   interface FastifyInstance {

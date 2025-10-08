@@ -49,10 +49,12 @@ RUN apk add --no-cache dumb-init
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
-# Copy package files
+# Copy package files (both root and backend)
+COPY --chown=nodejs:nodejs package.json pnpm-workspace.yaml ./
 COPY --chown=nodejs:nodejs backend/package.json ./backend/
 
-# Copy production dependencies
+# Copy production dependencies (both root and backend node_modules needed)
+COPY --from=deps --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=deps --chown=nodejs:nodejs /app/backend/node_modules ./backend/node_modules
 
 # Copy built application

@@ -275,7 +275,13 @@ export class AccountService {
 
       logger.info({ accountId, platform, name: account.name }, 'Account created')
 
-      return this.parseAccountData(accountData)
+      // Re-fetch from repository to ensure proper format
+      const savedAccountData = await this.accountRepo.findById(platform, accountId)
+      if (!savedAccountData) {
+        throw new Error('Failed to retrieve created account')
+      }
+
+      return this.parseAccountData(savedAccountData)
     } catch (error) {
       logger.error({ error, platform, options }, 'Failed to create account')
       throw error

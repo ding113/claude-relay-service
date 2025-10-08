@@ -235,8 +235,18 @@ export class ApiKeyService {
 
       logger.info({ keyId, name: apiKey.name }, 'API Key created')
 
+      // Re-fetch from repository to ensure proper format
+      const savedKeyData = await this.apiKeyRepo.findById(keyId)
+      if (!savedKeyData) {
+        throw new Error('Failed to retrieve created API Key')
+      }
+
+      logger.debug({ savedKeyData }, 'Saved key data from repository')
+      const parsedKey = this.parseApiKeyData(savedKeyData)
+      logger.debug({ parsedKey }, 'Parsed key data')
+
       return {
-        key: this.parseApiKeyData(keyData),
+        key: parsedKey,
         rawKey
       }
     } catch (error) {

@@ -70,10 +70,13 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
           }
         },
         response: {
-          200: {
+          201: {
             type: 'object',
             properties: {
-              key: { type: 'object' },
+              key: { 
+                type: 'object',
+                additionalProperties: true  // Allow all properties
+              },
               rawKey: { type: 'string' }
             }
           }
@@ -84,7 +87,7 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
       try {
         const result = await apiKeyService.createApiKey(request.body)
 
-        return reply.send(result)
+        return reply.status(201).send(result)
       } catch (error) {
         request.log.error(error, 'Failed to create API Key')
 
@@ -191,7 +194,7 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              key: { type: 'object' }
+              key: { type: 'object', additionalProperties: true }
             }
           }
         }
@@ -276,7 +279,7 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              key: { type: 'object' }
+              key: { type: 'object', additionalProperties: true }
             }
           }
         }
@@ -324,11 +327,8 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
           }
         },
         response: {
-          200: {
-            type: 'object',
-            properties: {
-              message: { type: 'string' }
-            }
+          204: {
+            description: 'API Key deleted successfully'
           }
         }
       }
@@ -340,9 +340,7 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
 
         await apiKeyService.deleteApiKey(id, deletedBy)
 
-        return reply.send({
-          message: 'API Key deleted successfully'
-        })
+        return reply.status(204).send()
       } catch (error) {
         request.log.error(error, 'Failed to delete API Key')
 
@@ -380,7 +378,7 @@ export async function apikeyRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              key: { type: 'object' }
+              key: { type: 'object', additionalProperties: true }
             }
           }
         }

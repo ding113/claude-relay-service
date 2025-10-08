@@ -99,7 +99,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              accounts: { type: 'array' },
+              accounts: { type: 'array', items: { type: 'object', additionalProperties: true } },
               total: { type: 'number' }
             }
           }
@@ -215,10 +215,10 @@ export async function accountRoutes(fastify: FastifyInstance) {
           }
         },
         response: {
-          200: {
+          201: {
             type: 'object',
             properties: {
-              account: { type: 'object' }
+              account: { type: 'object', additionalProperties: true }
             }
           }
         }
@@ -231,7 +231,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
 
         const account = await accountService.createAccount(platform, options)
 
-        return reply.send({ account })
+        return reply.status(201).send({ account })
       } catch (error) {
         request.log.error(error, 'Failed to create account')
 
@@ -270,7 +270,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              account: { type: 'object' }
+              account: { type: 'object', additionalProperties: true }
             }
           }
         }
@@ -371,7 +371,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              account: { type: 'object' }
+              account: { type: 'object', additionalProperties: true }
             }
           }
         }
@@ -420,11 +420,8 @@ export async function accountRoutes(fastify: FastifyInstance) {
           }
         },
         response: {
-          200: {
-            type: 'object',
-            properties: {
-              message: { type: 'string' }
-            }
+          204: {
+            description: 'Account deleted successfully'
           }
         }
       }
@@ -435,9 +432,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
 
         await accountService.deleteAccount(platform, id)
 
-        return reply.send({
-          message: 'Account deleted successfully'
-        })
+        return reply.status(204).send()
       } catch (error) {
         request.log.error(error, 'Failed to delete account')
 
@@ -483,7 +478,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              account: { type: 'object' }
+              account: { type: 'object', additionalProperties: true }
             }
           }
         }
@@ -535,7 +530,7 @@ export async function accountRoutes(fastify: FastifyInstance) {
           200: {
             type: 'object',
             properties: {
-              account: { type: 'object' },
+              account: { type: 'object', additionalProperties: true },
               message: { type: 'string' }
             }
           }
